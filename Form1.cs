@@ -25,10 +25,10 @@ namespace VimeNotifier {
             string systemUsername = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
             logsPath = "C:\\Users\\" + systemUsername.Substring(systemUsername.LastIndexOf('\\') + 1) +
                        "\\AppData\\Roaming\\.vimeworld\\{0}\\logs\\latest.log";
-            chatSoundLabel.Text = chatSoundPath = !File.Exists(settings.chatSoundPath) ?
+            chatSoundLabel.Text = chatSoundPath = File.Exists(settings.chatSoundPath) ?
                 settings.chatSoundPath :
                 "C:\\Windows\\Media\\Windows Proximity Notification.wav";
-            gameSoundLabel.Text = gameSoundPath = !File.Exists(settings.gameSoundPath) ?
+            gameSoundLabel.Text = gameSoundPath = File.Exists(settings.gameSoundPath) ?
                 settings.gameSoundPath :
                 "C:\\Windows\\Media\\Windows Proximity Notification.wav";
             DMFlagCheckBox.Checked = settings.DMFlagCheckBox;
