@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="VimeNotifier.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="DMFlagCheckBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ChatFlagCheckBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="serverComboBox" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Minigames</Value>
+    </Setting>
+    <Setting Name="gameSoundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Windows\Media\Windows Proximity Notification.wav</Value>
+    </Setting>
+    <Setting Name="chatSoundPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Windows\Media\Windows Proximity Notification.wav</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
