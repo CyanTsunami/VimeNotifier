@@ -43,6 +43,7 @@
             this.label4 = new System.Windows.Forms.Label();
             this.usernameLabel = new System.Windows.Forms.Label();
             this.starterButton = new System.Windows.Forms.Button();
+            this.AliasesButton = new System.Windows.Forms.Button();
             this.gameNotifyGroupBox.SuspendLayout();
             this.chatNotifyGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -54,9 +55,9 @@
             this.gameNotifyGroupBox.Controls.Add(this.setOwnGameSoundButton);
             this.gameNotifyGroupBox.Controls.Add(this.gameSoundLabel);
             this.gameNotifyGroupBox.Controls.Add(this.label6);
-            this.gameNotifyGroupBox.Location = new System.Drawing.Point(14, 191);
+            this.gameNotifyGroupBox.Location = new System.Drawing.Point(14, 199);
             this.gameNotifyGroupBox.Name = "gameNotifyGroupBox";
-            this.gameNotifyGroupBox.Size = new System.Drawing.Size(288, 80);
+            this.gameNotifyGroupBox.Size = new System.Drawing.Size(288, 73);
             this.gameNotifyGroupBox.TabIndex = 3;
             this.gameNotifyGroupBox.TabStop = false;
             this.gameNotifyGroupBox.Text = "Игровые уведомления";
@@ -144,6 +145,7 @@
             // 
             // chatNotifyGroupBox
             // 
+            this.chatNotifyGroupBox.Controls.Add(this.AliasesButton);
             this.chatNotifyGroupBox.Controls.Add(this.ChatActivateCheckBox);
             this.chatNotifyGroupBox.Controls.Add(this.setDefaultChatSoundButton);
             this.chatNotifyGroupBox.Controls.Add(this.setOwnChatSoundButton);
@@ -153,7 +155,7 @@
             this.chatNotifyGroupBox.Controls.Add(this.DMFlagCheckBox);
             this.chatNotifyGroupBox.Location = new System.Drawing.Point(14, 65);
             this.chatNotifyGroupBox.Name = "chatNotifyGroupBox";
-            this.chatNotifyGroupBox.Size = new System.Drawing.Size(288, 120);
+            this.chatNotifyGroupBox.Size = new System.Drawing.Size(288, 128);
             this.chatNotifyGroupBox.TabIndex = 2;
             this.chatNotifyGroupBox.TabStop = false;
             this.chatNotifyGroupBox.Text = "Уведомления в чате";
@@ -260,11 +262,21 @@
             this.starterButton.UseVisualStyleBackColor = true;
             this.starterButton.Click += new System.EventHandler(this.StarterButton_Click);
             // 
+            // AliasesButton
+            // 
+            this.AliasesButton.Location = new System.Drawing.Point(9, 98);
+            this.AliasesButton.Name = "AliasesButton";
+            this.AliasesButton.Size = new System.Drawing.Size(272, 23);
+            this.AliasesButton.TabIndex = 10;
+            this.AliasesButton.Text = "Управление псевдонимами...";
+            this.AliasesButton.UseVisualStyleBackColor = true;
+            this.AliasesButton.Click += new System.EventHandler(this.AliasesButton_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 282);
+            this.ClientSize = new System.Drawing.Size(314, 281);
             this.Controls.Add(this.starterButton);
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.label4);
@@ -305,6 +317,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.CheckBox GameActivateCheckBox;
         private System.Windows.Forms.CheckBox ChatActivateCheckBox;
+        private System.Windows.Forms.Button AliasesButton;
     }
 }
 

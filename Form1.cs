@@ -19,6 +19,7 @@ namespace VimeNotifier {
         private readonly BackgroundWorker chatWorker, apiWorker;
         private readonly SoundPlayer player;
         private readonly string logsPath;
+        private List<string> aliases;
         private string chatSoundPath, gameSoundPath, username;
         private bool started;
 
@@ -42,6 +43,11 @@ namespace VimeNotifier {
             apiWorker.DoWork += new DoWorkEventHandler(ApiHandler);
             logsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                        "\\.vimeworld\\{0}\\logs\\latest.log";
+            if(settings.aliases != string.Empty) {
+                foreach(string alias in settings.aliases.Split(';')) {
+                    aliases.Add(alias);
+                }
+            }
             started = false;
 
             ChatActivateCheckBox.Checked = settings.ChatActivateCheckBox;
@@ -57,10 +63,6 @@ namespace VimeNotifier {
             serverComboBox.Text = settings.serverComboBox;
 
             player = new SoundPlayer(chatSoundPath);
-
-            settings.chatSoundPath = chatSoundPath;
-            settings.gameSoundPath = gameSoundPath;
-            settings.Save();
         }
 
         public IEnumerable<string> ReadLines(StreamReader reader) {
@@ -192,6 +194,14 @@ namespace VimeNotifier {
         private void SoundLabel_TextChanged(object sender, EventArgs e) {
             Label label = (Label)sender;
             label.Text = label.Text.Substring(label.Text.LastIndexOf('\\') + 1);
+        }
+
+        private void AliasesButton_Click(object sender, EventArgs e) {
+            using(Form2 form = new Form2()) {
+                if(form.ShowDialog() == DialogResult.OK) {
+                    
+                }
+            }
         }
 
         private void SetDefaultChatSoundButton_Click(object sender, EventArgs e) {

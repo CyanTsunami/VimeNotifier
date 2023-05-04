@@ -106,5 +106,17 @@ namespace VimeNotifier.Properties {
                 this["GameActivateCheckBox"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string aliases {
+            get {
+                return ((string)(this["aliases"]));
+            }
+            set {
+                this["aliases"] = value;
+            }
+        }
     }
 }
