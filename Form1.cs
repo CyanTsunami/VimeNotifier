@@ -54,12 +54,14 @@ namespace VimeNotifier {
 
             ChatActivateCheckBox.Checked = settings.ChatActivateCheckBox;
             GameActivateCheckBox.Checked = settings.GameActivateCheckBox;
-            chatSoundLabel.Text = chatSoundPath = File.Exists(settings.chatSoundPath) ?
+            chatSoundPath = File.Exists(settings.chatSoundPath) ?
                 settings.chatSoundPath :
-                "C:\\Windows\\Media\\Windows Notify Messaging.wav";
-            gameSoundLabel.Text = gameSoundPath = File.Exists(settings.gameSoundPath) ?
+                "C:\\Windows\\Media\\Windows - колокольчик.wav";
+            chatSoundLabel.Text = chatSoundPath.Substring(chatSoundPath.LastIndexOf('\\') + 1);
+            gameSoundPath = File.Exists(settings.gameSoundPath) ?
                 settings.gameSoundPath :
-                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
+                "C:\\Windows\\Media\\Windows - восклицание.wav";
+            gameSoundLabel.Text = gameSoundPath.Substring(gameSoundPath.LastIndexOf('\\') + 1);
             DMFlagCheckBox.Checked = settings.DMFlagCheckBox;
             ChatFlagCheckBox.Checked = settings.ChatFlagCheckBox;
             serverComboBox.Text = settings.serverComboBox;
@@ -219,14 +221,16 @@ namespace VimeNotifier {
         }
 
         private void SetDefaultChatSoundButton_Click(object sender, EventArgs e) {
-            chatSoundLabel.Text = chatSoundPath = settings.chatSoundPath =
-                "C:\\Windows\\Media\\Windows Notify Messaging.wav";
+            chatSoundPath = settings.chatSoundPath =
+                "C:\\Windows\\Media\\Windows - колокольчик.wav";
+            chatSoundLabel.Text = chatSoundPath.Substring(chatSoundPath.LastIndexOf('\\') + 1);
             settings.Save();
         }
 
         private void SetDefaultGameSoundButton_Click(object sender, EventArgs e) {
-            gameSoundLabel.Text = gameSoundPath = settings.gameSoundPath =
-                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
+            gameSoundPath = settings.gameSoundPath =
+                "C:\\Windows\\Media\\Windows - восклицание.wav";
+            gameSoundLabel.Text = gameSoundPath.Substring(gameSoundPath.LastIndexOf('\\') + 1);
             settings.Save();
         }
 
