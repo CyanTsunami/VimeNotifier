@@ -43,6 +43,7 @@ namespace VimeNotifier {
             apiWorker.DoWork += new DoWorkEventHandler(ApiHandler);
             logsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
                        "\\.vimeworld\\{0}\\logs\\latest.log";
+            aliases = new List<string>();
             if(settings.aliases != string.Empty) {
                 foreach(string alias in settings.aliases.Split(';')) {
                     aliases.Add(alias);
@@ -70,6 +71,14 @@ namespace VimeNotifier {
             while((line = reader.ReadLine()) != null) {
                 yield return line;
             }
+        }
+
+        public static List<string> ComboBoxToList(ComboBox box) {
+            List<string> strings = new List<string>();
+            foreach(var item in box.Items) {
+                strings.Add(item.ToString());
+            }
+            return strings;
         }
 
         public string GetUsername(string filepath) {
@@ -197,9 +206,11 @@ namespace VimeNotifier {
         }
 
         private void AliasesButton_Click(object sender, EventArgs e) {
-            using(Form2 form = new Form2()) {
+            using(Form2 form = new Form2(settings.aliases)) {
                 if(form.ShowDialog() == DialogResult.OK) {
-                    
+                    aliases = ComboBoxToList(form.AliasesComboBox);
+                    settings.aliases = String.Join(";", aliases);
+                    settings.Save();
                 }
             }
         }
