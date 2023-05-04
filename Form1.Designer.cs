@@ -33,6 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.serverComboBox = new System.Windows.Forms.ComboBox();
             this.chatNotifyGroupBox = new System.Windows.Forms.GroupBox();
+            this.AliasesButton = new System.Windows.Forms.Button();
             this.ChatActivateCheckBox = new System.Windows.Forms.CheckBox();
             this.setDefaultChatSoundButton = new System.Windows.Forms.Button();
             this.setOwnChatSoundButton = new System.Windows.Forms.Button();
@@ -43,7 +44,6 @@
             this.label4 = new System.Windows.Forms.Label();
             this.usernameLabel = new System.Windows.Forms.Label();
             this.starterButton = new System.Windows.Forms.Button();
-            this.AliasesButton = new System.Windows.Forms.Button();
             this.gameNotifyGroupBox.SuspendLayout();
             this.chatNotifyGroupBox.SuspendLayout();
             this.SuspendLayout();
@@ -154,10 +154,20 @@
             this.chatNotifyGroupBox.Controls.Add(this.DMFlagCheckBox);
             this.chatNotifyGroupBox.Location = new System.Drawing.Point(14, 65);
             this.chatNotifyGroupBox.Name = "chatNotifyGroupBox";
-            this.chatNotifyGroupBox.Size = new System.Drawing.Size(304, 120);
+            this.chatNotifyGroupBox.Size = new System.Drawing.Size(304, 128);
             this.chatNotifyGroupBox.TabIndex = 2;
             this.chatNotifyGroupBox.TabStop = false;
             this.chatNotifyGroupBox.Text = "Уведомления в чате";
+            // 
+            // AliasesButton
+            // 
+            this.AliasesButton.Location = new System.Drawing.Point(9, 98);
+            this.AliasesButton.Name = "AliasesButton";
+            this.AliasesButton.Size = new System.Drawing.Size(289, 23);
+            this.AliasesButton.TabIndex = 10;
+            this.AliasesButton.Text = "Управление псевдонимами...";
+            this.AliasesButton.UseVisualStyleBackColor = true;
+            this.AliasesButton.Click += new System.EventHandler(this.AliasesButton_Click);
             // 
             // ChatActivateCheckBox
             // 
@@ -259,16 +269,6 @@
             this.starterButton.Text = "Включить";
             this.starterButton.UseVisualStyleBackColor = true;
             this.starterButton.Click += new System.EventHandler(this.StarterButton_Click);
-            // 
-            // AliasesButton
-            // 
-            this.AliasesButton.Location = new System.Drawing.Point(9, 98);
-            this.AliasesButton.Name = "AliasesButton";
-            this.AliasesButton.Size = new System.Drawing.Size(272, 23);
-            this.AliasesButton.TabIndex = 10;
-            this.AliasesButton.Text = "Управление псевдонимами...";
-            this.AliasesButton.UseVisualStyleBackColor = true;
-            this.AliasesButton.Click += new System.EventHandler(this.AliasesButton_Click);
             // 
             // Form1
             // 

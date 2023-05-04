@@ -12,10 +12,10 @@
       <Value Profile="(Default)">Minigames</Value>
     </Setting>
     <Setting Name="gameSoundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Windows\Media\Windows - восклицание.wav</Value>
+      <Value Profile="(Default)">C:\Windows\Media\Windows Exclamation.wav</Value>
     </Setting>
     <Setting Name="chatSoundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Windows\Media\Windows - колокольчик.wav</Value>
+      <Value Profile="(Default)">C:\Windows\Media\Windows Ding.wav</Value>
     </Setting>
     <Setting Name="ChatActivateCheckBox" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

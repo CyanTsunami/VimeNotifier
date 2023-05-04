@@ -61,7 +61,7 @@ namespace VimeNotifier.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Windows\\Media\\Windows - восклицание.wav")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Windows\\Media\\Windows Exclamation.wav")]
         public string gameSoundPath {
             get {
                 return ((string)(this["gameSoundPath"]));
@@ -73,7 +73,7 @@ namespace VimeNotifier.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Windows\\Media\\Windows - колокольчик.wav")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Windows\\Media\\Windows Ding.wav")]
         public string chatSoundPath {
             get {
                 return ((string)(this["chatSoundPath"]));

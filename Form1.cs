@@ -18,7 +18,7 @@ namespace VimeNotifier {
         private readonly Properties.Settings settings = Properties.Settings.Default;
         private readonly Regex userLineRegex, logRemoveRegex, DMRegex, chatRegex;
         private readonly BackgroundWorker chatWorker, apiWorker;
-        private readonly SoundPlayer player;
+        private readonly SoundPlayer chatPlayer, gamePlayer;
         private readonly string logsPath;
         private List<string> aliases;
         private string chatSoundPath, gameSoundPath, username;
@@ -56,17 +56,20 @@ namespace VimeNotifier {
             GameActivateCheckBox.Checked = settings.GameActivateCheckBox;
             chatSoundPath = File.Exists(settings.chatSoundPath) ?
                 settings.chatSoundPath :
-                "C:\\Windows\\Media\\Windows - колокольчик.wav";
+                "C:\\Windows\\Media\\Windows Ding.wav";
             chatSoundLabel.Text = chatSoundPath.Substring(chatSoundPath.LastIndexOf('\\') + 1);
             gameSoundPath = File.Exists(settings.gameSoundPath) ?
                 settings.gameSoundPath :
-                "C:\\Windows\\Media\\Windows - восклицание.wav";
+                "C:\\Windows\\Media\\Windows Exclamation.wav";
             gameSoundLabel.Text = gameSoundPath.Substring(gameSoundPath.LastIndexOf('\\') + 1);
             DMFlagCheckBox.Checked = settings.DMFlagCheckBox;
             ChatFlagCheckBox.Checked = settings.ChatFlagCheckBox;
             serverComboBox.Text = settings.serverComboBox;
-
-            player = new SoundPlayer(chatSoundPath);
+            
+            chatPlayer = new SoundPlayer(chatSoundPath);
+            gamePlayer = new SoundPlayer(gameSoundPath);
+            chatPlayer.LoadAsync();
+            gamePlayer.LoadAsync();
         }
 
         public IEnumerable<string> ReadLines(StreamReader reader) {
@@ -141,12 +144,10 @@ namespace VimeNotifier {
                             parts[1] = parts[1].ToLower();
                             if(parts[1].Contains(username) ||
                                aliases.Any(alias => parts[1].Contains(alias))) {
-                                player.SoundLocation = chatSoundPath;
-                                player.Play();
+                                chatPlayer.Play();
                             }
                         } else if(DMFlagCheckBox.Checked && DMRegex.Match(templine).Success) {
-                            player.SoundLocation = chatSoundPath;
-                            player.Play();
+                            chatPlayer.Play();
                         }
                     }
                     Thread.Sleep(500);
@@ -191,8 +192,7 @@ namespace VimeNotifier {
                     string newMsg = newJson["online"]["message"].ToString();
                     string oldMsg = oldJson["online"]["message"].ToString();
                     if(newMsg != oldMsg && newMsg.ToString() != "Находится в Лобби") {
-                        player.SoundLocation = gameSoundPath;
-                        player.Play();
+                        gamePlayer.Play();
                     }
                     oldJson = newJson;
                 }
@@ -222,14 +222,14 @@ namespace VimeNotifier {
 
         private void SetDefaultChatSoundButton_Click(object sender, EventArgs e) {
             chatSoundPath = settings.chatSoundPath =
-                "C:\\Windows\\Media\\Windows - колокольчик.wav";
+                "C:\\Windows\\Media\\Windows Ding.wav";
             chatSoundLabel.Text = chatSoundPath.Substring(chatSoundPath.LastIndexOf('\\') + 1);
             settings.Save();
         }
 
         private void SetDefaultGameSoundButton_Click(object sender, EventArgs e) {
             gameSoundPath = settings.gameSoundPath =
-                "C:\\Windows\\Media\\Windows - восклицание.wav";
+                "C:\\Windows\\Media\\Windows Exclamation.wav";
             gameSoundLabel.Text = gameSoundPath.Substring(gameSoundPath.LastIndexOf('\\') + 1);
             settings.Save();
         }
@@ -241,7 +241,10 @@ namespace VimeNotifier {
                 dialog.FilterIndex = 0;
                 dialog.RestoreDirectory = true;
                 if(dialog.ShowDialog() == DialogResult.OK) {
-                    chatSoundLabel.Text = settings.chatSoundPath = chatSoundPath = dialog.FileName;
+                    settings.chatSoundPath = chatSoundPath = dialog.FileName;
+                    chatSoundLabel.Text = chatSoundPath.Substring(chatSoundPath.LastIndexOf('\\') + 1);
+                    chatPlayer.SoundLocation = chatSoundPath;
+                    chatPlayer.Load();
                     settings.Save();
                 }
             }
@@ -254,7 +257,10 @@ namespace VimeNotifier {
                 dialog.FilterIndex = 0;
                 dialog.RestoreDirectory = true;
                 if(dialog.ShowDialog() == DialogResult.OK) {
-                    gameSoundLabel.Text = settings.gameSoundPath = gameSoundPath = dialog.FileName;
+                    settings.gameSoundPath = gameSoundPath = dialog.FileName;
+                    gameSoundLabel.Text = gameSoundPath.Substring(gameSoundPath.LastIndexOf('\\') + 1);
+                    gamePlayer.SoundLocation = gameSoundPath;
+                    gamePlayer.Load();
                     settings.Save();
                 }
             }
