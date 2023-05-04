@@ -15,7 +15,13 @@
       <Value Profile="(Default)">C:\Windows\Media\Windows Proximity Notification.wav</Value>
     </Setting>
     <Setting Name="chatSoundPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Windows\Media\Windows Proximity Notification.wav</Value>
+      <Value Profile="(Default)">C:\Windows\Media\Windows Notify Messaging.wav</Value>
+    </Setting>
+    <Setting Name="ChatActivateCheckBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="GameActivateCheckBox" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

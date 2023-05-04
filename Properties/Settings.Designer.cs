@@ -73,13 +73,37 @@ namespace VimeNotifier.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Windows\\Media\\Windows Proximity Notification.wav")]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Windows\\Media\\Windows Notify Messaging.wav")]
         public string chatSoundPath {
             get {
                 return ((string)(this["chatSoundPath"]));
             }
             set {
                 this["chatSoundPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ChatActivateCheckBox {
+            get {
+                return ((bool)(this["ChatActivateCheckBox"]));
+            }
+            set {
+                this["ChatActivateCheckBox"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GameActivateCheckBox {
+            get {
+                return ((bool)(this["GameActivateCheckBox"]));
+            }
+            set {
+                this["GameActivateCheckBox"] = value;
             }
         }
     }

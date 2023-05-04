@@ -25,6 +25,7 @@
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.gameNotifyGroupBox = new System.Windows.Forms.GroupBox();
+            this.GameActivateCheckBox = new System.Windows.Forms.CheckBox();
             this.setDefaultGameSoundButton = new System.Windows.Forms.Button();
             this.setOwnGameSoundButton = new System.Windows.Forms.Button();
             this.gameSoundLabel = new System.Windows.Forms.Label();
@@ -32,6 +33,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.serverComboBox = new System.Windows.Forms.ComboBox();
             this.chatNotifyGroupBox = new System.Windows.Forms.GroupBox();
+            this.ChatActivateCheckBox = new System.Windows.Forms.CheckBox();
             this.setDefaultChatSoundButton = new System.Windows.Forms.Button();
             this.setOwnChatSoundButton = new System.Windows.Forms.Button();
             this.chatSoundLabel = new System.Windows.Forms.Label();
@@ -47,50 +49,64 @@
             // 
             // gameNotifyGroupBox
             // 
+            this.gameNotifyGroupBox.Controls.Add(this.GameActivateCheckBox);
             this.gameNotifyGroupBox.Controls.Add(this.setDefaultGameSoundButton);
             this.gameNotifyGroupBox.Controls.Add(this.setOwnGameSoundButton);
             this.gameNotifyGroupBox.Controls.Add(this.gameSoundLabel);
             this.gameNotifyGroupBox.Controls.Add(this.label6);
-            this.gameNotifyGroupBox.Location = new System.Drawing.Point(14, 206);
+            this.gameNotifyGroupBox.Location = new System.Drawing.Point(14, 191);
             this.gameNotifyGroupBox.Name = "gameNotifyGroupBox";
-            this.gameNotifyGroupBox.Size = new System.Drawing.Size(288, 88);
+            this.gameNotifyGroupBox.Size = new System.Drawing.Size(288, 80);
             this.gameNotifyGroupBox.TabIndex = 3;
             this.gameNotifyGroupBox.TabStop = false;
             this.gameNotifyGroupBox.Text = "Игровые уведомления";
             // 
+            // GameActivateCheckBox
+            // 
+            this.GameActivateCheckBox.AutoSize = true;
+            this.GameActivateCheckBox.Checked = true;
+            this.GameActivateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.GameActivateCheckBox.Location = new System.Drawing.Point(185, 19);
+            this.GameActivateCheckBox.Name = "GameActivateCheckBox";
+            this.GameActivateCheckBox.Size = new System.Drawing.Size(97, 17);
+            this.GameActivateCheckBox.TabIndex = 8;
+            this.GameActivateCheckBox.Text = "Активировать";
+            this.GameActivateCheckBox.UseVisualStyleBackColor = true;
+            this.GameActivateCheckBox.CheckedChanged += new System.EventHandler(this.FlagCheckBox_CheckedChanged);
+            // 
             // setDefaultGameSoundButton
             // 
-            this.setDefaultGameSoundButton.Location = new System.Drawing.Point(138, 48);
+            this.setDefaultGameSoundButton.Location = new System.Drawing.Point(149, 42);
             this.setDefaultGameSoundButton.Name = "setDefaultGameSoundButton";
-            this.setDefaultGameSoundButton.Size = new System.Drawing.Size(123, 23);
+            this.setDefaultGameSoundButton.Size = new System.Drawing.Size(133, 23);
             this.setDefaultGameSoundButton.TabIndex = 7;
             this.setDefaultGameSoundButton.Text = "Сбросить";
             this.setDefaultGameSoundButton.UseVisualStyleBackColor = true;
-            this.setDefaultGameSoundButton.Click += new System.EventHandler(this.setDefaultGameSoundButton_Click);
+            this.setDefaultGameSoundButton.Click += new System.EventHandler(this.SetDefaultGameSoundButton_Click);
             // 
             // setOwnGameSoundButton
             // 
-            this.setOwnGameSoundButton.Location = new System.Drawing.Point(9, 48);
+            this.setOwnGameSoundButton.Location = new System.Drawing.Point(9, 42);
             this.setOwnGameSoundButton.Name = "setOwnGameSoundButton";
-            this.setOwnGameSoundButton.Size = new System.Drawing.Size(123, 23);
+            this.setOwnGameSoundButton.Size = new System.Drawing.Size(133, 23);
             this.setOwnGameSoundButton.TabIndex = 6;
             this.setOwnGameSoundButton.Text = "Выбрать свой звук...";
             this.setOwnGameSoundButton.UseVisualStyleBackColor = true;
-            this.setOwnGameSoundButton.Click += new System.EventHandler(this.setOwnGameSoundButton_Click);
+            this.setOwnGameSoundButton.Click += new System.EventHandler(this.SetOwnGameSoundButton_Click);
             // 
             // gameSoundLabel
             // 
-            this.gameSoundLabel.Location = new System.Drawing.Point(39, 27);
+            this.gameSoundLabel.Location = new System.Drawing.Point(39, 20);
             this.gameSoundLabel.Name = "gameSoundLabel";
-            this.gameSoundLabel.Size = new System.Drawing.Size(222, 13);
+            this.gameSoundLabel.Size = new System.Drawing.Size(140, 13);
             this.gameSoundLabel.TabIndex = 5;
             this.gameSoundLabel.Text = "...";
-            this.gameSoundLabel.TextChanged += new System.EventHandler(this.soundLabel_TextChanged);
+            this.gameSoundLabel.TextChanged += new System.EventHandler(this.SoundLabel_TextChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 27);
+            this.label6.Location = new System.Drawing.Point(6, 20);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(34, 13);
             this.label6.TabIndex = 4;
@@ -99,10 +115,10 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label2.Location = new System.Drawing.Point(16, 18);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label2.Location = new System.Drawing.Point(16, 14);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 13);
+            this.label2.Size = new System.Drawing.Size(47, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Сервер:";
             // 
@@ -120,55 +136,69 @@
             "Empire",
             "Wurst",
             "Hoden"});
-            this.serverComboBox.Location = new System.Drawing.Point(72, 14);
+            this.serverComboBox.Location = new System.Drawing.Point(72, 10);
             this.serverComboBox.Name = "serverComboBox";
             this.serverComboBox.Size = new System.Drawing.Size(139, 21);
             this.serverComboBox.TabIndex = 0;
-            this.serverComboBox.SelectedIndexChanged += new System.EventHandler(this.serverComboBox_SelectedIndexChanged);
+            this.serverComboBox.SelectedIndexChanged += new System.EventHandler(this.ServerComboBox_SelectedIndexChanged);
             // 
             // chatNotifyGroupBox
             // 
+            this.chatNotifyGroupBox.Controls.Add(this.ChatActivateCheckBox);
             this.chatNotifyGroupBox.Controls.Add(this.setDefaultChatSoundButton);
             this.chatNotifyGroupBox.Controls.Add(this.setOwnChatSoundButton);
             this.chatNotifyGroupBox.Controls.Add(this.chatSoundLabel);
             this.chatNotifyGroupBox.Controls.Add(this.label3);
             this.chatNotifyGroupBox.Controls.Add(this.ChatFlagCheckBox);
             this.chatNotifyGroupBox.Controls.Add(this.DMFlagCheckBox);
-            this.chatNotifyGroupBox.Location = new System.Drawing.Point(14, 80);
+            this.chatNotifyGroupBox.Location = new System.Drawing.Point(14, 65);
             this.chatNotifyGroupBox.Name = "chatNotifyGroupBox";
             this.chatNotifyGroupBox.Size = new System.Drawing.Size(288, 120);
             this.chatNotifyGroupBox.TabIndex = 2;
             this.chatNotifyGroupBox.TabStop = false;
             this.chatNotifyGroupBox.Text = "Уведомления в чате";
             // 
+            // ChatActivateCheckBox
+            // 
+            this.ChatActivateCheckBox.AutoSize = true;
+            this.ChatActivateCheckBox.Checked = true;
+            this.ChatActivateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.ChatActivateCheckBox.Location = new System.Drawing.Point(185, 23);
+            this.ChatActivateCheckBox.Name = "ChatActivateCheckBox";
+            this.ChatActivateCheckBox.Size = new System.Drawing.Size(97, 17);
+            this.ChatActivateCheckBox.TabIndex = 9;
+            this.ChatActivateCheckBox.Text = "Активировать";
+            this.ChatActivateCheckBox.UseVisualStyleBackColor = true;
+            this.ChatActivateCheckBox.CheckedChanged += new System.EventHandler(this.FlagCheckBox_CheckedChanged);
+            // 
             // setDefaultChatSoundButton
             // 
-            this.setDefaultChatSoundButton.Location = new System.Drawing.Point(138, 75);
+            this.setDefaultChatSoundButton.Location = new System.Drawing.Point(149, 69);
             this.setDefaultChatSoundButton.Name = "setDefaultChatSoundButton";
-            this.setDefaultChatSoundButton.Size = new System.Drawing.Size(123, 23);
+            this.setDefaultChatSoundButton.Size = new System.Drawing.Size(133, 23);
             this.setDefaultChatSoundButton.TabIndex = 5;
             this.setDefaultChatSoundButton.Text = "Сбросить";
             this.setDefaultChatSoundButton.UseVisualStyleBackColor = true;
-            this.setDefaultChatSoundButton.Click += new System.EventHandler(this.setDefaultChatSoundButton_Click);
+            this.setDefaultChatSoundButton.Click += new System.EventHandler(this.SetDefaultChatSoundButton_Click);
             // 
             // setOwnChatSoundButton
             // 
-            this.setOwnChatSoundButton.Location = new System.Drawing.Point(9, 75);
+            this.setOwnChatSoundButton.Location = new System.Drawing.Point(9, 69);
             this.setOwnChatSoundButton.Name = "setOwnChatSoundButton";
-            this.setOwnChatSoundButton.Size = new System.Drawing.Size(123, 23);
+            this.setOwnChatSoundButton.Size = new System.Drawing.Size(133, 23);
             this.setOwnChatSoundButton.TabIndex = 4;
             this.setOwnChatSoundButton.Text = "Выбрать свой звук...";
             this.setOwnChatSoundButton.UseVisualStyleBackColor = true;
-            this.setOwnChatSoundButton.Click += new System.EventHandler(this.setOwnSoundButton_Click);
+            this.setOwnChatSoundButton.Click += new System.EventHandler(this.SetOwnSoundButton_Click);
             // 
             // chatSoundLabel
             // 
             this.chatSoundLabel.Location = new System.Drawing.Point(39, 23);
             this.chatSoundLabel.Name = "chatSoundLabel";
-            this.chatSoundLabel.Size = new System.Drawing.Size(222, 13);
+            this.chatSoundLabel.Size = new System.Drawing.Size(140, 13);
             this.chatSoundLabel.TabIndex = 3;
             this.chatSoundLabel.Text = "...";
-            this.chatSoundLabel.TextChanged += new System.EventHandler(this.soundLabel_TextChanged);
+            this.chatSoundLabel.TextChanged += new System.EventHandler(this.SoundLabel_TextChanged);
             // 
             // label3
             // 
@@ -182,7 +212,7 @@
             // ChatFlagCheckBox
             // 
             this.ChatFlagCheckBox.AutoSize = true;
-            this.ChatFlagCheckBox.Location = new System.Drawing.Point(140, 46);
+            this.ChatFlagCheckBox.Location = new System.Drawing.Point(149, 46);
             this.ChatFlagCheckBox.Name = "ChatFlagCheckBox";
             this.ChatFlagCheckBox.Size = new System.Drawing.Size(124, 17);
             this.ChatFlagCheckBox.TabIndex = 3;
@@ -204,17 +234,17 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.label4.Location = new System.Drawing.Point(16, 46);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.label4.Location = new System.Drawing.Point(16, 42);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(47, 13);
+            this.label4.Size = new System.Drawing.Size(41, 13);
             this.label4.TabIndex = 8;
             this.label4.Text = "Игрок:";
             // 
             // usernameLabel
             // 
             this.usernameLabel.AutoSize = true;
-            this.usernameLabel.Location = new System.Drawing.Point(73, 46);
+            this.usernameLabel.Location = new System.Drawing.Point(73, 42);
             this.usernameLabel.Name = "usernameLabel";
             this.usernameLabel.Size = new System.Drawing.Size(16, 13);
             this.usernameLabel.TabIndex = 9;
@@ -222,19 +252,19 @@
             // 
             // starterButton
             // 
-            this.starterButton.Location = new System.Drawing.Point(217, 14);
+            this.starterButton.Location = new System.Drawing.Point(217, 10);
             this.starterButton.Name = "starterButton";
-            this.starterButton.Size = new System.Drawing.Size(79, 23);
+            this.starterButton.Size = new System.Drawing.Size(85, 23);
             this.starterButton.TabIndex = 1;
             this.starterButton.Text = "Включить";
             this.starterButton.UseVisualStyleBackColor = true;
-            this.starterButton.Click += new System.EventHandler(this.starterButton_Click);
+            this.starterButton.Click += new System.EventHandler(this.StarterButton_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(314, 306);
+            this.ClientSize = new System.Drawing.Size(314, 282);
             this.Controls.Add(this.starterButton);
             this.Controls.Add(this.usernameLabel);
             this.Controls.Add(this.label4);
@@ -273,6 +303,8 @@
         private System.Windows.Forms.Button setOwnGameSoundButton;
         private System.Windows.Forms.Label gameSoundLabel;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.CheckBox GameActivateCheckBox;
+        private System.Windows.Forms.CheckBox ChatActivateCheckBox;
     }
 }
 

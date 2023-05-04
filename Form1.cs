@@ -14,27 +14,16 @@ using System.Windows.Forms;
 
 namespace VimeNotifier {
     public partial class Form1: Form {
-        private Properties.Settings settings = Properties.Settings.Default;
-        private Regex userLineRegex, logRemoveRegex, DMRegex, chatRegex;
-        private BackgroundWorker chatWorker, apiWorker;
-        private SoundPlayer player;
-        private string logsPath, chatSoundPath, gameSoundPath, username;
+        private readonly Properties.Settings settings = Properties.Settings.Default;
+        private readonly Regex userLineRegex, logRemoveRegex, DMRegex, chatRegex;
+        private readonly BackgroundWorker chatWorker, apiWorker;
+        private readonly SoundPlayer player;
+        private readonly string logsPath;
+        private string chatSoundPath, gameSoundPath, username;
+        private bool started;
 
         public Form1() {
             InitializeComponent();
-            string systemUsername = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
-            logsPath = "C:\\Users\\" + systemUsername.Substring(systemUsername.LastIndexOf('\\') + 1) +
-                       "\\AppData\\Roaming\\.vimeworld\\{0}\\logs\\latest.log";
-            chatSoundLabel.Text = chatSoundPath = File.Exists(settings.chatSoundPath) ?
-                settings.chatSoundPath :
-                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
-            gameSoundLabel.Text = gameSoundPath = File.Exists(settings.gameSoundPath) ?
-                settings.gameSoundPath :
-                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
-            DMFlagCheckBox.Checked = settings.DMFlagCheckBox;
-            ChatFlagCheckBox.Checked = settings.ChatFlagCheckBox;
-            serverComboBox.Text = settings.serverComboBox;
-
             userLineRegex = new Regex(
                 "^\\[\\d{2}:\\d{2}:\\d{2}\\]( \\[[\\w .\\/]*\\])*: " +
                 "Setting user: \\w{3,16}");
@@ -47,15 +36,26 @@ namespace VimeNotifier {
             chatRegex = new Regex(
                 "^\\[\\d{2}:\\d{2}:\\d{2}\\]( \\[[\\w .\\/]*\\])*: \\[CHAT\\]" +
                 "( \\(Всем\\)| <.{1,5}>)?( \\[.{1,4}\\])? [\\w\\d]{3,16}: .*$");
+            chatWorker = new BackgroundWorker { WorkerSupportsCancellation = true };
+            chatWorker.DoWork += new DoWorkEventHandler(ChatHandler);
+            apiWorker = new BackgroundWorker { WorkerSupportsCancellation = true };
+            apiWorker.DoWork += new DoWorkEventHandler(ApiHandler);
+            logsPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) +
+                       "\\.vimeworld\\{0}\\logs\\latest.log";
+            started = false;
 
-            chatWorker = new BackgroundWorker {
-                WorkerSupportsCancellation = true
-            };
-            chatWorker.DoWork += new DoWorkEventHandler(chatHandler);
-            apiWorker = new BackgroundWorker {
-                WorkerSupportsCancellation = true
-            };
-            apiWorker.DoWork += new DoWorkEventHandler(apiHandler);
+            ChatActivateCheckBox.Checked = settings.ChatActivateCheckBox;
+            GameActivateCheckBox.Checked = settings.GameActivateCheckBox;
+            chatSoundLabel.Text = chatSoundPath = File.Exists(settings.chatSoundPath) ?
+                settings.chatSoundPath :
+                "C:\\Windows\\Media\\Windows Notify Messaging.wav";
+            gameSoundLabel.Text = gameSoundPath = File.Exists(settings.gameSoundPath) ?
+                settings.gameSoundPath :
+                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
+            DMFlagCheckBox.Checked = settings.DMFlagCheckBox;
+            ChatFlagCheckBox.Checked = settings.ChatFlagCheckBox;
+            serverComboBox.Text = settings.serverComboBox;
+
             player = new SoundPlayer(chatSoundPath);
 
             settings.chatSoundPath = chatSoundPath;
@@ -70,44 +70,20 @@ namespace VimeNotifier {
             }
         }
 
-        public string getUsername(string filepath) {
-            Stream stream = new FileStream(filepath, FileMode.Open,
-                                           FileAccess.Read, FileShare.ReadWrite);
-            StreamReader reader = new StreamReader(stream, Encoding.UTF8);
-            string result = string.Empty;
-            foreach(string line in ReadLines(reader)) {
-                if(userLineRegex.Match(line).Success) {
-                    int index = line.IndexOf("Setting user:");
-                    result = line.Substring(index + 14);
-                    break;
+        public string GetUsername(string filepath) {
+            using(Stream stream = new FileStream(filepath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)) {
+                using(StreamReader reader = new StreamReader(stream, Encoding.UTF8)) {
+                    string result = string.Empty;
+                    foreach(string line in ReadLines(reader)) {
+                        if(userLineRegex.Match(line).Success) {
+                            int index = line.IndexOf("Setting user:");
+                            result = line.Substring(index + 14);
+                            break;
+                        }
+                    }
+                    return result;
                 }
             }
-            reader.Close();
-            stream.Close();
-            return result;
-        }
-
-        private void FlagCheckBox_CheckedChanged(object sender, EventArgs e) {
-            CheckBox box = (CheckBox)sender;
-            settings[box.Name] = box.Checked;
-            settings.Save();
-        }
-
-        private void soundLabel_TextChanged(object sender, EventArgs e) {
-            Label label = (Label)sender;
-            label.Text = label.Text.Substring(label.Text.LastIndexOf('\\') + 1);
-        }
-
-        private void setDefaultChatSoundButton_Click(object sender, EventArgs e) {
-            chatSoundLabel.Text = chatSoundPath = settings.chatSoundPath = 
-                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
-            settings.Save();
-        }
-
-        private void setDefaultGameSoundButton_Click(object sender, EventArgs e) {
-            gameSoundLabel.Text = gameSoundPath = settings.gameSoundPath =
-                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
-            settings.Save();
         }
 
         public dynamic GetJsonResponse(HttpClient client, string url, ref int code) {
@@ -115,9 +91,9 @@ namespace VimeNotifier {
             dynamic obj;
             if(!response.IsSuccessStatusCode) {
                 obj = response.Content != null ?
-                    JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result) : 
+                    JsonConvert.DeserializeObject(response.Content.ReadAsStringAsync().Result) :
                     new JObject();
-                code = obj.First != null ? 
+                code = obj.First != null ?
                     ((int)obj.First["error"]["error_code"]) : -3;
                 return obj;
             }
@@ -126,7 +102,7 @@ namespace VimeNotifier {
             return obj;
         }
 
-        public void safeRestore() {
+        public void SafeRestore() {
             if(!InvokeRequired) {
                 chatWorker.CancelAsync();
 
@@ -134,13 +110,12 @@ namespace VimeNotifier {
                 chatNotifyGroupBox.Enabled = chatWorker.IsBusy;
                 gameNotifyGroupBox.Enabled = serverComboBox.Text == "Minigames" && chatWorker.IsBusy;
             } else {
-                Invoke(new Action(() => safeRestore()));
+                Invoke(new Action(() => SafeRestore()));
             }
         }
 
-        private void chatHandler(object sender, DoWorkEventArgs e) {
-            Stream stream = new FileStream((string)e.Argument, FileMode.Open,
-                                           FileAccess.Read, FileShare.ReadWrite);
+        private void ChatHandler(object sender, DoWorkEventArgs e) {
+            Stream stream = new FileStream((string)e.Argument, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             stream.Seek(0, SeekOrigin.End);
 
             using(StreamReader reader = new StreamReader(stream, Encoding.UTF8)) {
@@ -164,13 +139,13 @@ namespace VimeNotifier {
             stream.Close();
         }
 
-        private void apiHandler(object sender, DoWorkEventArgs e) {
+        private void ApiHandler(object sender, DoWorkEventArgs e) {
             using(HttpClient client = new HttpClient()) {
                 int code = 0;
-                dynamic oldJson = GetJsonResponse(client, 
+                dynamic oldJson = GetJsonResponse(client,
                     "https://api.vimeworld.com/user/name/" + username, ref code);
                 if(code != 0) {
-                    safeRestore();
+                    SafeRestore();
                     MessageBox.Show("Ошибка обращения к API. Код ошибки: " + code.ToString(),
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -180,7 +155,7 @@ namespace VimeNotifier {
                 oldJson = GetJsonResponse(client, "https://api.vimeworld.com/user/" + id.ToString() +
                     "/session", ref code);
                 if(code != 0) {
-                    safeRestore();
+                    SafeRestore();
                     MessageBox.Show("Ошибка обращения к API. Код ошибки: " + code.ToString(),
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
@@ -191,7 +166,7 @@ namespace VimeNotifier {
                     dynamic newJson = GetJsonResponse(client, "https://api.vimeworld.com/user/" + id.ToString() +
                         "/session", ref code);
                     if(code != 0) {
-                        safeRestore();
+                        SafeRestore();
                         MessageBox.Show("Ошибка обращения к API. Код ошибки: " + code.ToString(),
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
@@ -208,7 +183,30 @@ namespace VimeNotifier {
             }
         }
 
-        private void setOwnSoundButton_Click(object sender, EventArgs e) {
+        private void FlagCheckBox_CheckedChanged(object sender, EventArgs e) {
+            CheckBox box = (CheckBox)sender;
+            settings[box.Name] = box.Checked;
+            settings.Save();
+        }
+
+        private void SoundLabel_TextChanged(object sender, EventArgs e) {
+            Label label = (Label)sender;
+            label.Text = label.Text.Substring(label.Text.LastIndexOf('\\') + 1);
+        }
+
+        private void SetDefaultChatSoundButton_Click(object sender, EventArgs e) {
+            chatSoundLabel.Text = chatSoundPath = settings.chatSoundPath =
+                "C:\\Windows\\Media\\Windows Notify Messaging.wav";
+            settings.Save();
+        }
+
+        private void SetDefaultGameSoundButton_Click(object sender, EventArgs e) {
+            gameSoundLabel.Text = gameSoundPath = settings.gameSoundPath =
+                "C:\\Windows\\Media\\Windows Proximity Notification.wav";
+            settings.Save();
+        }
+
+        private void SetOwnSoundButton_Click(object sender, EventArgs e) {
             using(OpenFileDialog dialog = new OpenFileDialog()) {
                 dialog.InitialDirectory = chatSoundPath.Remove(chatSoundPath.LastIndexOf('\\'));
                 dialog.Filter = ".wav файлы (*.wav)|*.wav";
@@ -221,7 +219,7 @@ namespace VimeNotifier {
             }
         }
 
-        private void setOwnGameSoundButton_Click(object sender, EventArgs e) {
+        private void SetOwnGameSoundButton_Click(object sender, EventArgs e) {
             using(OpenFileDialog dialog = new OpenFileDialog()) {
                 dialog.InitialDirectory = chatSoundPath.Remove(chatSoundPath.LastIndexOf('\\'));
                 dialog.Filter = ".wav файлы (*.wav)|*.wav";
@@ -234,20 +232,28 @@ namespace VimeNotifier {
             }
         }
 
-        private void serverComboBox_SelectedIndexChanged(object sender, EventArgs e) {
+        private void ServerComboBox_SelectedIndexChanged(object sender, EventArgs e) {
             gameNotifyGroupBox.Enabled = serverComboBox.Text == "Minigames";
             settings.serverComboBox = serverComboBox.Text;
             settings.Save();
         }
 
-        private async void starterButton_Click(object sender, EventArgs e) {
+        private async void StarterButton_Click(object sender, EventArgs e) {
+            if(!(ChatActivateCheckBox.Checked || GameActivateCheckBox.Checked)) {
+                MessageBox.Show("Ни один модуль не был включен. Зачем запускать тогда?", "Информация", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             string path = string.Format(logsPath, serverComboBox.Text.ToLower());
             if(!File.Exists(path)) {
                 MessageBox.Show("Файл не существует", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(path, "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            username = getUsername(path);
+            username = GetUsername(path);
             if(username == string.Empty) {
                 MessageBox.Show("Не удалось найти никнейм", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -256,20 +262,25 @@ namespace VimeNotifier {
             usernameLabel.Text = username;
             username = username.ToLower();
 
-            starterButton.Text = chatWorker.IsBusy ? "Включить" : "Выключить";
+            started = !started;
+            starterButton.Text = started ? "Выключить" : "Включить";
             starterButton.Enabled = false;
-            serverComboBox.Enabled = chatNotifyGroupBox.Enabled = chatWorker.IsBusy;
-            gameNotifyGroupBox.Enabled = serverComboBox.Text == "Minigames" && chatWorker.IsBusy;
-            if(chatWorker.IsBusy) {
-                if(serverComboBox.Text == "Minigames") {
-                    apiWorker.CancelAsync();
-                }
-                chatWorker.CancelAsync();
-            } else {
-                if(serverComboBox.Text == "Minigames") {
+            serverComboBox.Enabled = chatNotifyGroupBox.Enabled = !started;
+            gameNotifyGroupBox.Enabled = serverComboBox.Text == "Minigames" && !started;
+            if(started) {
+                if(GameActivateCheckBox.Checked && serverComboBox.Text == "Minigames") {
                     apiWorker.RunWorkerAsync();
                 }
-                chatWorker.RunWorkerAsync(path);
+                if(ChatActivateCheckBox.Checked) {
+                    chatWorker.RunWorkerAsync(path);
+                }
+            } else {
+                if(apiWorker.IsBusy) {
+                    apiWorker.CancelAsync();
+                }
+                if(chatWorker.IsBusy) {
+                    chatWorker.CancelAsync();
+                }
             }
             await Task.Delay(2000);
             starterButton.Enabled = true;
