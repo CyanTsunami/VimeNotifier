@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Media;
 using System.Net.Http;
 using System.Text;
@@ -135,7 +136,9 @@ namespace VimeNotifier {
                         if((ChatFlagCheckBox.Checked && chatRegex.Match(templine).Success)) {
                             string line = logRemoveRegex.Replace(templine, "");
                             string[] parts = line.Split(new char[] {':'}, 2);
-                            if(parts[1].ToLower().Contains(username)) {
+                            parts[1] = parts[1].ToLower();
+                            if(parts[1].Contains(username) ||
+                               aliases.Any(alias => parts[1].Contains(alias))) {
                                 player.SoundLocation = chatSoundPath;
                                 player.Play();
                             }
